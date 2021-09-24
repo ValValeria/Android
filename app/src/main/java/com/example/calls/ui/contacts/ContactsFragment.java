@@ -8,17 +8,13 @@ import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import com.example.calls.R;
-import com.example.calls.models.Call;
 import com.example.calls.models.Contact;
 import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.ConcurrentLinkedDeque;
