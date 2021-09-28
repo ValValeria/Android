@@ -14,7 +14,7 @@ import com.example.calls.models.Contact;
 import org.jetbrains.annotations.NotNull;
 
 public class ContactFragment extends Fragment {
-    private static final String PHONE_ARG = "PHONE_ARG";
+    public static final String PHONE_ARG = "PHONE_ARG";
     private String phoneNumber;
 
     public ContactFragment() {

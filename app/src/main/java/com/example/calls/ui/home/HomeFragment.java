@@ -18,9 +18,13 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.example.calls.R;
 import com.example.calls.models.Call;
+import com.example.calls.ui.contact.ContactFragment;
+
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
@@ -35,6 +39,7 @@ public class HomeFragment extends Fragment {
             CallLog.Calls.TYPE,
             CallLog.Calls.DATE
     };
+    private NavController navController;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -48,6 +53,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         linearLayout = view.findViewById(R.id.calls);
+        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_container);
 
         int hasReadContactPermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_CONTACTS);
 
@@ -94,6 +100,15 @@ public class HomeFragment extends Fragment {
 
         LayoutInflater layoutInflater = LayoutInflater.from(requireContext());
         View view = layoutInflater.inflate(R.layout.contact_card, linearLayout, false);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString(ContactFragment.PHONE_ARG, call.getNumber());
+
+                navController.navigate(R.id.nav_contact, bundle);
+            }
+        });
 
         TextView textView = requireView().findViewById(R.id.name);
         textView.setText(call.getName());
