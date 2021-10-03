@@ -2,8 +2,11 @@ package com.example.calls.ui.home;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CallLog;
 import android.provider.ContactsContract;
@@ -18,15 +21,13 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-
 import com.example.calls.R;
 import com.example.calls.models.Call;
+import com.example.calls.models.Contact;
 import com.example.calls.ui.contact.ContactFragment;
-
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class HomeFragment extends Fragment {
     private static final int REQUEST_CODE_READ_CONTACTS = 1;
@@ -39,7 +40,7 @@ public class HomeFragment extends Fragment {
             CallLog.Calls.TYPE,
             CallLog.Calls.DATE
     };
-    private NavController navController;
+    private AtomicInteger atomicInteger = new AtomicInteger(0);
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -53,7 +54,6 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         linearLayout = view.findViewById(R.id.calls);
-        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_container);
 
         int hasReadContactPermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_CONTACTS);
 
@@ -86,6 +86,11 @@ public class HomeFragment extends Fragment {
                 addView();
             }
 
+            if(list.size() == 0){
+                addNewContact();
+            }
+
+            atomicInteger.incrementAndGet();
             cursor.close();
         }
     }
@@ -106,7 +111,7 @@ public class HomeFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putString(ContactFragment.PHONE_ARG, call.getNumber());
 
-                navController.navigate(R.id.nav_contact, bundle);
+               // navController.navigate(R.id.nav_contact, bundle);
             }
         });
 
@@ -117,5 +122,21 @@ public class HomeFragment extends Fragment {
         textView2.setText(call.getDate());
 
         linearLayout.addView(view);
+    }
+
+    private void addNewContact(){
+        Contact contact = new Contact();
+        contact.setName("calls bot");
+        contact.setPhoneNumber("+3800998736224");
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ContactsContract.Data.RAW_CONTACT_ID, 1);
+        contentValues.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE);
+        contentValues.put(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, contact.getName());
+        contentValues.put(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, contact.getName());
+        contentValues.put(ContactsContract.CommonDataKinds.Phone.NUMBER, contact.getPhoneNumber());
+        contentValues.put(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
+
+        requireActivity().getContentResolver().insert(ContactsContract.RawContacts.CONTENT_URI, contentValues);
     }
 }
