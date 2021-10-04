@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -87,12 +88,20 @@ public class HomeFragment extends Fragment {
             }
 
             if(list.size() == 0){
-                addNewContact();
+                noResults();
+            } else {
+                linearLayout.removeAllViews();
+                linearLayout.invalidate();
             }
 
             atomicInteger.incrementAndGet();
             cursor.close();
         }
+    }
+
+    private void noResults() {
+        LayoutInflater layoutInflater = (LayoutInflater) requireActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        layoutInflater.inflate(R.layout.no_results, linearLayout, true);
     }
 
     @Override
@@ -105,14 +114,11 @@ public class HomeFragment extends Fragment {
 
         LayoutInflater layoutInflater = LayoutInflater.from(requireContext());
         View view = layoutInflater.inflate(R.layout.contact_card, linearLayout, false);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString(ContactFragment.PHONE_ARG, call.getNumber());
+        view.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putString(ContactFragment.PHONE_ARG, call.getNumber());
 
-               // navController.navigate(R.id.nav_contact, bundle);
-            }
+           // navController.navigate(R.id.nav_contact, bundle);
         });
 
         TextView textView = requireView().findViewById(R.id.name);
@@ -122,21 +128,5 @@ public class HomeFragment extends Fragment {
         textView2.setText(call.getDate());
 
         linearLayout.addView(view);
-    }
-
-    private void addNewContact(){
-        Contact contact = new Contact();
-        contact.setName("calls bot");
-        contact.setPhoneNumber("+3800998736224");
-
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(ContactsContract.Data.RAW_CONTACT_ID, 1);
-        contentValues.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE);
-        contentValues.put(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, contact.getName());
-        contentValues.put(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, contact.getName());
-        contentValues.put(ContactsContract.CommonDataKinds.Phone.NUMBER, contact.getPhoneNumber());
-        contentValues.put(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
-
-        requireActivity().getContentResolver().insert(ContactsContract.RawContacts.CONTENT_URI, contentValues);
     }
 }
