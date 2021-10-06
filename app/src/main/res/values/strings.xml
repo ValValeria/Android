@@ -21,4 +21,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="there_are_no_contacts">There are no contacts</string>
     <string name="add_a_contact">Add a contact</string>
+    <string name="call">Call</string>
+    <string name="view_the_contact">View the contact</string>
 </resources>

@@ -20,6 +20,7 @@
             android:background="?attr/colorPrimary"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
+            android:elevation="4dp"
             />
 
         <androidx.fragment.app.FragmentContainerView

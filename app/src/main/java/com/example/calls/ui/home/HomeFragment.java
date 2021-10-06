@@ -41,13 +41,10 @@ public class HomeFragment extends Fragment {
             CallLog.Calls.TYPE,
             CallLog.Calls.DATE
     };
-    private AtomicInteger atomicInteger = new AtomicInteger(0);
-
-    @Nullable
-    @org.jetbrains.annotations.Nullable
-    @Override
-    public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, container, false);
+    private final AtomicInteger atomicInteger = new AtomicInteger(0);
+    
+    public HomeFragment(){
+        super(R.layout.fragment_home);
     }
 
     @Override
@@ -117,8 +114,6 @@ public class HomeFragment extends Fragment {
         view.setOnClickListener(v -> {
             Bundle bundle = new Bundle();
             bundle.putString(ContactFragment.PHONE_ARG, call.getNumber());
-
-           // navController.navigate(R.id.nav_contact, bundle);
         });
 
         TextView textView = requireView().findViewById(R.id.name);
