@@ -6,21 +6,29 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="calls">Calls</string>
+    <string name="no_calls">There no calls</string>
     <string name="easy_calls_for_everyone">Easy calls for everyone</string>
     <string name="your_recent_calls">Your recent calls</string>
     <string name="content_description_media" />
     <string name="title">Title</string>
     <string name="secondary_text">Secondary text</string>
     <string name="supporting_text">text</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="there_are_no_contacts">There are no contacts</string>
-    <string name="add_a_contact">Add a contact</string>
     <string name="call">Call</string>
     <string name="view_the_contact">View the contact</string>
+    <string name="contacts">Contacts</string>
+    <string name="add_a_contact">Add a contact</string>
+    <string name="your_contacts">Your contacts</string>
+    <string name="add_a_new_contact">Add a new contact</string>
+    <string name="view_a_contact">View a contact</string>
+    <string name="submit">Submit</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="phone_number">Phone number</string>
+    <string name="search">Search</string>
 </resources>

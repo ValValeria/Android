@@ -1,12 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="@dimen/space"
+    >
+
+    <TextView
+        android:paddingTop="@dimen/space"
+        android:text="@string/your_contacts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:gravity="center_horizontal"
+        style="@style/TextAppearance.MaterialComponents.Headline4"
+        />
 
     <LinearLayout
         android:id="@+id/contacts_result"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" />
+        android:orientation="vertical"
+        android:paddingTop="@dimen/space_half"
+        />
 </LinearLayout>

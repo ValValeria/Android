@@ -70,7 +70,7 @@ public class ContactsFragment extends Fragment {
                         contact.setPhoneNumber(phoneNo);
 
                         contacts.add(contact);
-                        ContactsFragment.this.addView();
+                        ContactsFragment.this.addView(contact);
                     }
                     pCur.close();
                 }
@@ -81,16 +81,14 @@ public class ContactsFragment extends Fragment {
         }
     }
 
-    private void addView(){
-        Contact contact = contacts.getLast();
-
+    private void addView(Contact contact){
         LayoutInflater layoutInflater = LayoutInflater.from(requireContext());
         View view = layoutInflater.inflate(R.layout.contact_card, linearLayout, false);
 
-        TextView textView = requireView().findViewById(R.id.name);
+        TextView textView = view.findViewById(R.id.name);
         textView.setText(contact.getName());
 
-        TextView textView2 = requireView().findViewById(R.id.time);
+        TextView textView2 = view.findViewById(R.id.time);
         textView2.setText(contact.getPhoneNumber());
 
         linearLayout.addView(view);

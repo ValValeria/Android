@@ -14,6 +14,7 @@ import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,6 +23,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+
 import com.example.calls.R;
 import com.example.calls.models.Call;
 import com.example.calls.models.Contact;
@@ -42,7 +45,6 @@ public class HomeFragment extends Fragment {
             CallLog.Calls.DATE
     };
     private final AtomicInteger atomicInteger = new AtomicInteger(0);
-    
     public HomeFragment(){
         super(R.layout.fragment_home);
     }
@@ -98,7 +100,12 @@ public class HomeFragment extends Fragment {
 
     private void noResults() {
         LayoutInflater layoutInflater = (LayoutInflater) requireActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        layoutInflater.inflate(R.layout.no_results, linearLayout, true);
+        View view = layoutInflater.inflate(R.layout.no_results, linearLayout, false);
+        String str = getResources().getString(R.string.no_calls);
+        TextView textView = view.findViewById(R.id.no_results_text);
+        textView.setText(str);
+
+        linearLayout.addView(view);
     }
 
     @Override
@@ -116,11 +123,23 @@ public class HomeFragment extends Fragment {
             bundle.putString(ContactFragment.PHONE_ARG, call.getNumber());
         });
 
-        TextView textView = requireView().findViewById(R.id.name);
+        TextView textView = view.findViewById(R.id.name);
         textView.setText(call.getName());
 
-        TextView textView2 = requireView().findViewById(R.id.time);
+        TextView textView2 = view.findViewById(R.id.time);
         textView2.setText(call.getDate());
+
+        Button button = view.findViewById(R.id.view_btn);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               Bundle bundle = new Bundle();
+               bundle.putString(ContactFragment.PHONE_ARG, call.getNumber());
+
+               Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_container)
+                       .navigate(R.id.nav_contact, bundle);
+            }
+        });
 
         linearLayout.addView(view);
     }
