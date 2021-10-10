@@ -31,4 +31,6 @@
     <string name="email">Email</string>
     <string name="phone_number">Phone number</string>
     <string name="search">Search</string>
+    <string name="contact">Contact</string>
+    <string name="write_a_message">Write a message</string>
 </resources>

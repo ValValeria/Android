@@ -66,7 +66,7 @@ public class AddContactFragment extends Fragment {
         contentValues.put(ContactsContract.CommonDataKinds.Phone.NUMBER, contact.getPhoneNumber());
         contentValues.put(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
 
-        requireActivity().getContentResolver().insert(ContactsContract.RawContacts.CONTENT_URI, contentValues);
+        requireActivity().getContentResolver().insert(ContactsContract.Data.CONTENT_URI, contentValues);
 
         Snackbar snackbar = Snackbar.make(requireView(), "The contact is added", Snackbar.LENGTH_LONG);
         snackbar.show();

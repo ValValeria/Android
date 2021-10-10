@@ -2,32 +2,24 @@ package com.example.calls.ui.home;
 
 import android.Manifest;
 import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CallLog;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-
 import com.example.calls.R;
 import com.example.calls.models.Call;
-import com.example.calls.models.Contact;
 import com.example.calls.ui.contact.ContactFragment;
 import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;

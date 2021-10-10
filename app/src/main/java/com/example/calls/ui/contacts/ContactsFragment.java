@@ -8,14 +8,19 @@ import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+
 import com.example.calls.R;
 import com.example.calls.models.Contact;
+import com.example.calls.ui.contact.ContactFragment;
+
 import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -90,6 +95,18 @@ public class ContactsFragment extends Fragment {
 
         TextView textView2 = view.findViewById(R.id.time);
         textView2.setText(contact.getPhoneNumber());
+
+        Button button = view.findViewById(R.id.view_contact);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString(ContactFragment.PHONE_ARG, contact.getPhoneNumber());
+
+                Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main)
+                        .navigate(R.id.nav_contact, bundle);
+            }
+        });
 
         linearLayout.addView(view);
     }
