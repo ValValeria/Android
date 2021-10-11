@@ -17,7 +17,10 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.example.calls.R;
 import com.example.calls.models.Call;
 import com.example.calls.ui.contact.ContactFragment;
@@ -37,6 +40,8 @@ public class HomeFragment extends Fragment {
             CallLog.Calls.DATE
     };
     private final AtomicInteger atomicInteger = new AtomicInteger(0);
+    private NavController navController;
+
     public HomeFragment(){
         super(R.layout.fragment_home);
     }
@@ -46,6 +51,9 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         linearLayout = view.findViewById(R.id.calls);
+        NavHostFragment navHostFragment = (NavHostFragment) requireActivity().getSupportFragmentManager()
+                .findFragmentById(R.id.nav_host_fragment_content_main);
+        navController = navHostFragment.getNavController();
 
         int hasReadContactPermission = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_CONTACTS);
 
@@ -92,10 +100,23 @@ public class HomeFragment extends Fragment {
 
     private void noResults() {
         LayoutInflater layoutInflater = (LayoutInflater) requireActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         View view = layoutInflater.inflate(R.layout.no_results, linearLayout, false);
-        String str = getResources().getString(R.string.no_calls);
+        String noCallHeadline = getResources().getString(R.string.no_calls);
+        String noCallText = getResources().getString(R.string.no_call_text);
+        String findSomeOneText = getResources().getString(R.string.find_some_one);
+
         TextView textView = view.findViewById(R.id.no_results_text);
-        textView.setText(str);
+        textView.setText(noCallHeadline);
+        
+        TextView textView2 = view.findViewById(R.id.helper_text);
+        textView2.setText(noCallText);
+
+        Button button = view.findViewById(R.id.add_new_contact_btn);
+        button.setText(findSomeOneText);
+        button.setOnClickListener(v -> {
+            navController.navigate(R.id.nav_contacts);
+        });
 
         linearLayout.addView(view);
     }
@@ -110,10 +131,6 @@ public class HomeFragment extends Fragment {
 
         LayoutInflater layoutInflater = LayoutInflater.from(requireContext());
         View view = layoutInflater.inflate(R.layout.contact_card, linearLayout, false);
-        view.setOnClickListener(v -> {
-            Bundle bundle = new Bundle();
-            bundle.putString(ContactFragment.PHONE_ARG, call.getNumber());
-        });
 
         TextView textView = view.findViewById(R.id.name);
         textView.setText(call.getName());

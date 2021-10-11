@@ -32,5 +32,9 @@
     <string name="phone_number">Phone number</string>
     <string name="search">Search</string>
     <string name="contact">Contact</string>
-    <string name="write_a_message">Write a message</string>
+    <string name="write_a_message">A new message</string>
+    <string name="no_contacts_text">Add a new contact in our app. It is very fast</string>
+    <string name="no_call_text">Call someone. It is very fast and easy.</string>
+    <string name="find_some_one">View contacts</string>
+    <string name="delete">Delete</string>
 </resources>

@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +30,9 @@ public class ContactFragment extends Fragment {
     public static final String PHONE_ARG = "PHONE_ARG";
     private String phoneNumber;
     private ViewDataBinding contactFragmentBinding;
-    private Contact contact;
+    private final Contact contact = new Contact();
     private NavController navController;
+    private final String TAG = ContactFragment.class.getName();
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -40,6 +42,7 @@ public class ContactFragment extends Fragment {
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
 
         contactFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact, container, false);
+        contactFragmentBinding.setVariable(BR.contact, contact);
 
         return contactFragmentBinding.getRoot();
     }
@@ -71,20 +74,14 @@ public class ContactFragment extends Fragment {
                                 ContactsContract.CommonDataKinds.Phone.NUMBER));
 
                         if(phoneNo.equals(phoneNumber)){
-                            contact = new Contact();
                             contact.setName(name);
                             contact.setPhoneNumber(phoneNo);
 
-                            contactFragmentBinding.setVariable(BR.contact, contact);
-                            Button button = requireView().findViewById(R.id.call_contact);
-                            button.setOnClickListener((v) -> {
-                                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + contact.getPhoneNumber()));
-                                startActivity(intent);
-                            });
+                            contactFragmentBinding.invalidateAll();
                         }
                     }
 
-                    if(contact == null){
+                    if(contact.getPhoneNumber().isEmpty()){
                         Toast.makeText(requireContext(), "The contact is not found", Toast.LENGTH_LONG).show();
                         navController.navigate(R.id.nav_contacts);
                     }
@@ -99,5 +96,33 @@ public class ContactFragment extends Fragment {
     public void onViewCreated (@NonNull @NotNull View
                                        view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    public void deleteContact(View view){
+        ContentResolver contentResolver = requireActivity().getContentResolver();
+        Uri contactUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(contact.getPhoneNumber()));
+
+        try (Cursor cursor = contentResolver.query(contactUri, null, null, null, null)) {
+            if (cursor.moveToNext()) {
+                do {
+                    if (cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME)).equalsIgnoreCase(contact.getName())) {
+                        String lookupKey = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
+                        Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
+                        contentResolver.delete(uri, null, null);
+                        
+                        Toast.makeText(requireContext(), "The contact is deleted", Toast.LENGTH_LONG).show();
+                    }
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+          Log.e(TAG, e.getMessage());
+        }
+    }
+
+    public void writeAMessage(View view){}
+
+    public void callContact(View view){
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + contact.getPhoneNumber()));
+        startActivity(intent);
     }
 }

@@ -11,7 +11,7 @@
         android:layout_margin="@dimen/space_half"
         android:layout_marginTop="0dp"
         app:cardElevation="@dimen/card_elevation"
-        app:strokeWidth="1dp"
+        app:cardBackgroundColor="@color/orange"
         app:cardCornerRadius="@dimen/card_radius"
         >
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,20 +24,47 @@
                 android:layout_height="wrap_content"
                 android:text="@string/there_are_no_contacts"
                 android:gravity="center_horizontal"
+                android:textColor="@color/white"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 style="@style/TextAppearance.MaterialComponents.Headline5"
                 />
 
+            <TextView
+                android:id="@+id/helper_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_contacts_text"
+                android:gravity="center_horizontal"
+                android:textColor="@color/white"
+                android:layout_marginTop="@dimen/space"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/no_results_text"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                />
+
+            <View
+                android:id="@+id/line"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/white"
+                android:layout_marginTop="@dimen/space_half"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/helper_text"
+                />
+
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/add_new_contact_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/add_a_contact"
                 android:layout_marginTop="@dimen/space_half"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/no_results_text"
+                app:layout_constraintTop_toBottomOf="@id/line"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
