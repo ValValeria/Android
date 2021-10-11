@@ -77,6 +77,7 @@ public class ContactFragment extends Fragment {
                             contact.setName(name);
                             contact.setPhoneNumber(phoneNo);
 
+                            contactFragmentBinding.setVariable(BR.contact, contact);
                             contactFragmentBinding.invalidateAll();
                         }
                     }
@@ -119,7 +120,9 @@ public class ContactFragment extends Fragment {
         }
     }
 
-    public void writeAMessage(View view){}
+    public void writeAMessage(View view){
+        navController.navigate(R.id.nav_sms);
+    }
 
     public void callContact(View view){
         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + contact.getPhoneNumber()));

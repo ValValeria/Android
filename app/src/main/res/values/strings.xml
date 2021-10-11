@@ -37,4 +37,7 @@
     <string name="no_call_text">Call someone. It is very fast and easy.</string>
     <string name="find_some_one">View contacts</string>
     <string name="delete">Delete</string>
+    <string name="a_new_message">A new message</string>
+    <string name="the_text_of_sms">The text of sms</string>
+    <string name="send">Send</string>
 </resources>

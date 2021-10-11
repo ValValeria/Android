@@ -32,4 +32,10 @@
         android:name="com.example.calls.ui.add_contact.AddContactFragment"
         android:label="Contact"
         tools:layout="@layout/fragment_add_contact" />
+
+    <fragment
+       android:id="@+id/nav_sms"
+       android:name="com.example.calls.ui.message.MessageFragment"
+       android:label="Sms"
+       tools:layout="@layout/fragment_message" />
 </navigation>
