@@ -1,6 +1,7 @@
 package com.example.calls.ui.contacts;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.calls.R;
@@ -29,7 +31,8 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 public class ContactsFragment extends Fragment {
     private ConcurrentLinkedDeque<Contact> contacts = new ConcurrentLinkedDeque<>();
     private LinearLayout linearLayout;
-    private static String TAG = ContactsFragment.class.getName();
+    private static final String TAG = ContactsFragment.class.getName();
+    private NavController navController;
 
     public ContactsFragment(){
         super(R.layout.contacts);
@@ -40,6 +43,7 @@ public class ContactsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         linearLayout = view.findViewById(R.id.contacts_result);
+        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
     }
 
     @Override
@@ -77,12 +81,18 @@ public class ContactsFragment extends Fragment {
                         contacts.add(contact);
                         ContactsFragment.this.addView(contact);
                     }
+
                     pCur.close();
                 }
             }
         }
+
+        if(contacts.size() == 0){
+           noResults();
+        }
+        
         if(cur!=null){
-            cur.close();
+           cur.close();
         }
     }
 
@@ -97,17 +107,29 @@ public class ContactsFragment extends Fragment {
         textView2.setText(contact.getPhoneNumber());
 
         Button button = view.findViewById(R.id.view_contact);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString(ContactFragment.PHONE_ARG, contact.getPhoneNumber());
+        button.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putString(ContactFragment.PHONE_ARG, contact.getPhoneNumber());
 
-                Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main)
-                        .navigate(R.id.nav_contact, bundle);
-            }
+            navController.navigate(R.id.nav_contact, bundle);
         });
 
         linearLayout.addView(view);
+    }
+
+    private void noResults() {
+        LayoutInflater layoutInflater = (LayoutInflater) requireActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        View view = layoutInflater.inflate(R.layout.no_results, linearLayout, false);
+
+        Button button = view.findViewById(R.id.add_new_contact_btn);
+        button.setOnClickListener(v -> {
+            navController.navigate(R.id.nav_add_contact);
+        });
+
+        linearLayout.addView(view);
+        linearLayout.invalidate();
+        
+        Log.i(TAG, "noResults method is called");
     }
 }

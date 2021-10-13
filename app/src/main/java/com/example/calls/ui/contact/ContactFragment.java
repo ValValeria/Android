@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,33 +24,27 @@ import androidx.navigation.Navigation;
 
 import com.example.calls.BR;
 import com.example.calls.R;
+import com.example.calls.databinding.FragmentContactBinding;
 import com.example.calls.models.Contact;
 import org.jetbrains.annotations.NotNull;
 
 public class ContactFragment extends Fragment {
     public static final String PHONE_ARG = "PHONE_ARG";
     private String phoneNumber;
-    private ViewDataBinding contactFragmentBinding;
     private final Contact contact = new Contact();
     private NavController navController;
     private final String TAG = ContactFragment.class.getName();
 
-    @Nullable
-    @org.jetbrains.annotations.Nullable
-    @Override
-    public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
-        phoneNumber = requireArguments().getString(PHONE_ARG);
-        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
-
-        contactFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_contact, container, false);
-        contactFragmentBinding.setVariable(BR.contact, contact);
-
-        return contactFragmentBinding.getRoot();
+    public ContactFragment(){
+      super(R.layout.fragment_contact);
     }
 
     @Override
     public void onStart() {
         super.onStart();
+
+        phoneNumber = requireArguments().getString(PHONE_ARG);
+        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
 
         ContentResolver contentResolver = requireActivity().getContentResolver();
         @SuppressLint("Recycle") Cursor cur = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
@@ -77,8 +72,7 @@ public class ContactFragment extends Fragment {
                             contact.setName(name);
                             contact.setPhoneNumber(phoneNo);
 
-                            contactFragmentBinding.setVariable(BR.contact, contact);
-                            contactFragmentBinding.invalidateAll();
+                            setupUI();
                         }
                     }
 
@@ -97,6 +91,23 @@ public class ContactFragment extends Fragment {
     public void onViewCreated (@NonNull @NotNull View
                                        view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState){
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    public void setupUI(){
+        TextView name = requireView().findViewById(R.id.contact_name);
+        name.setText(contact.getName());
+
+        TextView phone = requireView().findViewById(R.id.contact_phone);
+        phone.setText(contact.getPhoneNumber());
+
+        Button callBtn = requireView().findViewById(R.id.call_btn);
+        callBtn.setOnClickListener(this::callContact);
+
+        Button writeBtn = requireView().findViewById(R.id.write_btn);
+        writeBtn.setOnClickListener(this::writeAMessage);
+
+        Button deleteBtn = requireView().findViewById(R.id.delete_btn);
+        deleteBtn.setOnClickListener(this::deleteContact);
     }
 
     public void deleteContact(View view){
@@ -127,5 +138,10 @@ public class ContactFragment extends Fragment {
     public void callContact(View view){
         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + contact.getPhoneNumber()));
         startActivity(intent);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }

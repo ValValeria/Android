@@ -1,145 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical">
 
-    <data>
-        <variable name="fragment" type="com.example.calls.ui.contact.ContactFragment" />
-        <variable
-            name="contact"
-            type="com.example.calls.models.Contact"
-            />
-    </data>
-
-    <LinearLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <TextView
+        android:paddingTop="@dimen/space"
+        android:text="@string/contact"
+        android:layout_marginBottom="@dimen/space_half"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:gravity="center_horizontal"
+        style="@style/TextAppearance.MaterialComponents.Headline4"
+        />
 
-        <TextView
-            android:paddingTop="@dimen/space"
-            android:text="@string/contact"
-            android:layout_marginBottom="@dimen/space_half"
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/space_half"
+        android:layout_marginTop="@dimen/space_half"
+        app:cardBackgroundColor="@color/orange"
+        app:cardElevation="@dimen/card_elevation"
+        app:strokeWidth="1dp"
+        app:cardCornerRadius="@dimen/card_radius"
+        >
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
+            android:orientation="horizontal"
             android:gravity="center_horizontal"
-            style="@style/TextAppearance.MaterialComponents.Headline4"
-            />
+            android:padding="@dimen/space_half"
+            >
+            <Button
+                android:id="@+id/call_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/call"
+                android:layout_marginRight="@dimen/space_half"
+                android:layout_marginEnd="@dimen/space_half" />
 
-        <com.google.android.material.card.MaterialCardView
+            <Button
+                android:id="@+id/write_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/write_a_message"
+                android:layout_marginRight="@dimen/space_half"
+                />
+
+            <Button
+                android:id="@+id/delete_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/delete"
+                />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/space_half"
+        android:layout_marginTop="@dimen/space"
+        app:cardElevation="@dimen/card_elevation"
+        app:strokeWidth="1dp"
+        app:cardCornerRadius="@dimen/card_radius"
+        >
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/space_half"
-            android:layout_marginTop="@dimen/space_half"
-            app:cardBackgroundColor="@color/orange"
-            app:cardElevation="@dimen/card_elevation"
-            app:strokeWidth="1dp"
-            app:cardCornerRadius="@dimen/card_radius"
+            android:padding="@dimen/space"
+            android:orientation="vertical"
             >
-            <LinearLayout
+            <TextView
+                android:paddingTop="@dimen/space"
+                android:text="@string/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_horizontal"
-                android:padding="@dimen/space_half"
-                >
-                <Button
-                    android:id="@+id/call_contact"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/call"
-                    android:onClick="@{fragment::callContact}"
-                    android:layout_marginRight="@dimen/space_half"
-                    android:layout_marginEnd="@dimen/space_half" />
+                android:layout_gravity="start"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+               />
 
-                <Button
-                    android:id="@+id/write_message"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/write_a_message"
-                    android:onClick="@{fragment::writeAMessage}"
-                    android:layout_marginRight="@dimen/space_half"
-                    />
-
-                <Button
-                    android:id="@+id/delete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/delete"
-                    android:onClick="@{fragment::deleteContact}"
-                    />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/space_half"
-            android:layout_marginTop="@dimen/space"
-            app:cardElevation="@dimen/card_elevation"
-            app:strokeWidth="1dp"
-            app:cardCornerRadius="@dimen/card_radius"
-            >
-            <GridLayout
+            <TextView
+                android:id="@+id/contact_name"
+                android:paddingTop="@dimen/space"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/space"
-                android:rowCount="3"
-                android:columnCount="4"
-                >
-                <TextView
-                    android:paddingTop="@dimen/space"
-                    android:text="@string/name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_columnSpan="1"
-                    android:layout_gravity="start"
-                    android:layout_marginRight="@dimen/space_half"
-                    style="@style/TextAppearance.MaterialComponents.Headline6"
-                    android:layout_marginEnd="@dimen/space_half" />
+                android:layout_gravity="start"
+                android:text="@string/submit"
+                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:layout_marginBottom="@dimen/space"
+                />
 
-                <TextView
-                    android:paddingTop="@dimen/space"
-                    android:text="@{contact.name}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_columnSpan="3"
-                    android:layout_gravity="start"
-                    style="@style/TextAppearance.MaterialComponents.Headline6"
-                    />
+            <View
+                android:id="@+id/line"
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray"
+                android:layout_marginTop="@dimen/space_half"
+                android:layout_marginBottom="@dimen/space_half"
+                />
 
-                <View
-                    android:id="@+id/line"
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/gray"
-                    android:layout_marginTop="@dimen/space_half"
-                    android:layout_columnSpan="4"
-                    />
+            <TextView
+                android:paddingTop="@dimen/space"
+                android:text="@string/phone_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                />
 
-                <TextView
-                    android:paddingTop="@dimen/space"
-                    android:text="@string/phone_number"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_columnSpan="1"
-                    android:layout_gravity="start"
-                    android:layout_marginRight="@dimen/space_half"
-                    style="@style/TextAppearance.MaterialComponents.Headline6"
-                    android:layout_marginEnd="@dimen/space_half" />
+            <TextView
+                android:id="@+id/contact_phone"
+                android:paddingTop="@dimen/space"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>
 
-                <TextView
-                    android:paddingTop="@dimen/space"
-                    android:text="@{contact.phoneNumber}"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_columnSpan="3"
-                    android:layout_gravity="start"
-                    style="@style/TextAppearance.MaterialComponents.Headline6"
-                    />
-            </GridLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-    </LinearLayout>
-</layout>
