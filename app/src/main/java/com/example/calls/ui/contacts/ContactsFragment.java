@@ -33,6 +33,7 @@ public class ContactsFragment extends Fragment {
     private LinearLayout linearLayout;
     private static final String TAG = ContactsFragment.class.getName();
     private NavController navController;
+    private View noResultsView;
 
     public ContactsFragment(){
         super(R.layout.contacts);
@@ -50,8 +51,23 @@ public class ContactsFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        ContentResolver cr = requireActivity().getContentResolver();
-        Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
+        loadContacts();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        this.contacts.clear();
+        this.linearLayout.removeAllViews();
+        this.linearLayout.invalidate();
+
+        this.loadContacts();
+    }
+
+    private void loadContacts(){
+        final ContentResolver cr = requireActivity().getContentResolver();
+        final Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null, null);
 
         if ((cur != null ? cur.getCount() : 0) > 0) {
@@ -88,11 +104,11 @@ public class ContactsFragment extends Fragment {
         }
 
         if(contacts.size() == 0){
-           noResults();
+            noResults();
         }
-        
+
         if(cur!=null){
-           cur.close();
+            cur.close();
         }
     }
 
@@ -120,14 +136,14 @@ public class ContactsFragment extends Fragment {
     private void noResults() {
         LayoutInflater layoutInflater = (LayoutInflater) requireActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View view = layoutInflater.inflate(R.layout.no_results, linearLayout, false);
+        noResultsView = layoutInflater.inflate(R.layout.no_results, linearLayout, false);
 
-        Button button = view.findViewById(R.id.add_new_contact_btn);
+        Button button = noResultsView.findViewById(R.id.add_new_contact_btn);
         button.setOnClickListener(v -> {
             navController.navigate(R.id.nav_add_contact);
         });
 
-        linearLayout.addView(view);
+        linearLayout.addView(noResultsView);
         linearLayout.invalidate();
         
         Log.i(TAG, "noResults method is called");

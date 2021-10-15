@@ -14,12 +14,16 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.calls.R;
+import com.example.calls.ui.contact.ContactFragment;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.jetbrains.annotations.NotNull;
 
 
 public class MessageFragment extends Fragment {
+    private String phoneNumber;
+    private TextInputEditText numberField;
+    
     public MessageFragment() {
         // Required empty public constructor
     }
@@ -27,6 +31,8 @@ public class MessageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        phoneNumber = requireArguments().getString(ContactFragment.PHONE_ARG);
     }
 
     @Override
@@ -39,16 +45,17 @@ public class MessageFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        numberField.setText(phoneNumber); 
         Button button = view.findViewById(R.id.sms_btn);
         button.setOnClickListener(this::sendMessage);
     }
 
     private void sendMessage(View view){
-        TextInputEditText number = requireView().findViewById(R.id.messageTxt);
-        String numberText = number.getText().toString();
+        numberField = requireView().findViewById(R.id.messageTxt);
+        String numberText = numberField.getText().toString();
 
-        TextInputEditText message = requireView().findViewById(R.id.phoneNumber);
-        String messageText = message.getText().toString();
+        TextInputEditText messageField = requireView().findViewById(R.id.phoneNumber);
+        String messageText = messageField.getText().toString();
 
         SmsManager.getDefault()
                 .sendTextMessage(numberText, null, messageText, null, null);

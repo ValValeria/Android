@@ -30,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
 
 public class ContactFragment extends Fragment {
     public static final String PHONE_ARG = "PHONE_ARG";
-    private String phoneNumber;
     private final Contact contact = new Contact();
     private NavController navController;
     private final String TAG = ContactFragment.class.getName();
@@ -43,7 +42,7 @@ public class ContactFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        phoneNumber = requireArguments().getString(PHONE_ARG);
+        String phoneNumber = requireArguments().getString(PHONE_ARG);
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
 
         ContentResolver contentResolver = requireActivity().getContentResolver();
@@ -117,12 +116,15 @@ public class ContactFragment extends Fragment {
         try (Cursor cursor = contentResolver.query(contactUri, null, null, null, null)) {
             if (cursor.moveToNext()) {
                 do {
-                    if (cursor.getString(cursor.getColumnIndex(ContactsContract.PhoneLookup.DISPLAY_NAME)).equalsIgnoreCase(contact.getName())) {
+                    int index = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+
+                    if (cursor.getString(index).equalsIgnoreCase(contact.getPhoneNumber())) {
                         String lookupKey = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
                         Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
                         contentResolver.delete(uri, null, null);
                         
                         Toast.makeText(requireContext(), "The contact is deleted", Toast.LENGTH_LONG).show();
+                        break;
                     }
                 } while (cursor.moveToNext());
             }
@@ -132,7 +134,10 @@ public class ContactFragment extends Fragment {
     }
 
     public void writeAMessage(View view){
-        navController.navigate(R.id.nav_sms);
+        Bundle bundle = new Bundle();
+        bundle.putString(PHONE_ARG, contact.getPhoneNumber());
+
+        navController.navigate(R.id.nav_sms, bundle);
     }
 
     public void callContact(View view){

@@ -1,30 +1,31 @@
 package com.example.calls.ui.add_contact;
 
-import android.content.ContentValues;
+import android.content.ContentProviderOperation;
+import android.content.ContentResolver;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
+import androidx.navigation.fragment.NavHostFragment;
 import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 import com.example.calls.R;
 import com.example.calls.models.Contact;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
-
 import org.jetbrains.annotations.NotNull;
+import androidx.navigation.NavController;
+import java.util.ArrayList;
 
 
 public class AddContactFragment extends Fragment {
     private TextInputEditText email;
     private TextInputEditText phoneNumber;
     private TextInputEditText name;
+    private NavController navController;
 
     public AddContactFragment() {
         // Required empty public constructor
@@ -49,6 +50,10 @@ public class AddContactFragment extends Fragment {
         name = view.findViewById(R.id.nameInput);
         phoneNumber = view.findViewById(R.id.phoneInput);
 
+        NavHostFragment navHostFragment = (NavHostFragment) requireActivity().getSupportFragmentManager()
+                .findFragmentById(R.id.nav_host_fragment_content_main);
+        navController = navHostFragment.getNavController();
+
         Button button = view.findViewById(R.id.add_contact_btn);
         button.setOnClickListener(this::addNewContact);
     }
@@ -58,17 +63,43 @@ public class AddContactFragment extends Fragment {
         contact.setName(this.name.getText().toString());
         contact.setPhoneNumber(this.phoneNumber.getText().toString());
 
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(ContactsContract.Data.RAW_CONTACT_ID, 1);
-        contentValues.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE);
-        contentValues.put(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, contact.getName());
-        contentValues.put(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, contact.getName());
-        contentValues.put(ContactsContract.CommonDataKinds.Phone.NUMBER, contact.getPhoneNumber());
-        contentValues.put(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
+        String message = "The contact is added";
 
-        requireActivity().getContentResolver().insert(ContactsContract.Data.CONTENT_URI, contentValues);
+        try{
+            ArrayList<ContentProviderOperation> ops = new ArrayList<>();
+            ContentResolver contentResolver = requireActivity().getContentResolver();
 
-        Snackbar snackbar = Snackbar.make(requireView(), "The contact is added", Snackbar.LENGTH_LONG);
+            ops.add(ContentProviderOperation.newInsert(
+                    ContactsContract.Data.CONTENT_URI)
+                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                    .withValue(ContactsContract.Data.MIMETYPE,
+                            ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                    .withValue(
+                            ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
+                            contact.getName()).build());
+
+            ops.add(ContentProviderOperation.
+                    newInsert(ContactsContract.Data.CONTENT_URI)
+                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                    .withValue(ContactsContract.Data.MIMETYPE,
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                    .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, contact.getPhoneNumber())
+                    .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
+                            ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
+                    .build());
+
+            contentResolver.applyBatch(ContactsContract.AUTHORITY, ops);
+
+            requireView().postDelayed(() -> {
+                navController.navigate(R.id.nav_contacts);
+            }, Snackbar.LENGTH_LONG + 300);
+        }catch(Exception e){
+            e.printStackTrace();
+
+            message = "Please, try again";
+        }
+
+        Snackbar snackbar = Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG);
         snackbar.show();
     }
 }
