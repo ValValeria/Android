@@ -1,5 +1,6 @@
 package com.example.calls.ui.add_contact;
 
+import android.accounts.AccountManager;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.os.Bundle;
@@ -69,6 +70,11 @@ public class AddContactFragment extends Fragment {
             ArrayList<ContentProviderOperation> ops = new ArrayList<>();
             ContentResolver contentResolver = requireActivity().getContentResolver();
 
+            ops.add(ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
+                    .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, AccountManager.KEY_ACCOUNT_TYPE)
+                    .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, AccountManager.KEY_ACCOUNT_NAME)
+                    .build());
+
             ops.add(ContentProviderOperation.newInsert(
                     ContactsContract.Data.CONTENT_URI)
                     .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
@@ -86,6 +92,14 @@ public class AddContactFragment extends Fragment {
                     .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, contact.getPhoneNumber())
                     .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
                             ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
+                    .build());
+
+            ops.add(ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
+                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                    .withValue(ContactsContract.Data.MIMETYPE,
+                            ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE)
+                    .withValue(ContactsContract.CommonDataKinds.Email.DATA, "")
+                    .withValue(ContactsContract.CommonDataKinds.Email.TYPE, email.getText().toString())
                     .build());
 
             contentResolver.applyBatch(ContactsContract.AUTHORITY, ops);

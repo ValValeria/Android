@@ -7,16 +7,17 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import android.support.v7.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
-
 import com.google.android.material.navigation.NavigationView;
-
+import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import org.jetbrains.annotations.NotNull;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawerLayout;
@@ -47,7 +48,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main, menu);
-        return true;
+
+        MenuItem menuItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) menuItem.getActionView();
+        setupSearch(searchView);
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -61,5 +67,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         return false;
+    }
+
+    private void setupSearch(SearchView searchView){
+        /*RxSearchView.queryTextChanges(searchView)
+                .doOnEach(notification -> {
+                    CharSequence query = (CharSequence) notification.getValue();
+                })
+                .debounce(300, TimeUnit.MILLISECONDS) // to skip intermediate letters
+                .flatMap(query -> {
+
+                }) // make a search request
+                .retry(3)
+                .subscribe(results -> {
+
+                });*/
     }
 }
