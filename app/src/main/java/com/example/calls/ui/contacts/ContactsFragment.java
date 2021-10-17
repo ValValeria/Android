@@ -24,6 +24,9 @@ import com.example.calls.models.Contact;
 import com.example.calls.ui.contact.ContactFragment;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 
@@ -33,7 +36,6 @@ public class ContactsFragment extends Fragment {
     private LinearLayout linearLayout;
     private static final String TAG = ContactsFragment.class.getName();
     private NavController navController;
-    private View noResultsView;
 
     public ContactsFragment(){
         super(R.layout.contacts);
@@ -65,10 +67,10 @@ public class ContactsFragment extends Fragment {
         this.loadContacts();
     }
 
-    private void loadContacts(){
-        final ContentResolver cr = requireActivity().getContentResolver();
+    public static List<Contact> getContacts(ContentResolver cr){
         final Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
                 null, null, null, null);
+        final ArrayList<Contact> contacts = new ArrayList<>();
 
         if ((cur != null ? cur.getCount() : 0) > 0) {
             while (cur.moveToNext()) {
@@ -95,7 +97,6 @@ public class ContactsFragment extends Fragment {
                         contact.setPhoneNumber(phoneNo);
 
                         contacts.add(contact);
-                        ContactsFragment.this.addView(contact);
                     }
 
                     pCur.close();
@@ -103,12 +104,20 @@ public class ContactsFragment extends Fragment {
             }
         }
 
+        return contacts;
+    }
+
+    private void loadContacts(){
+        final ContentResolver cr = requireActivity().getContentResolver();
+
+        this.contacts.addAll(getContacts(cr));
+
         if(contacts.size() == 0){
             noResults();
-        }
-
-        if(cur!=null){
-            cur.close();
+        } else {
+            for(Contact contact: contacts){
+                addView(contact);
+            }
         }
     }
 
@@ -136,7 +145,7 @@ public class ContactsFragment extends Fragment {
     private void noResults() {
         LayoutInflater layoutInflater = (LayoutInflater) requireActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        noResultsView = layoutInflater.inflate(R.layout.no_results, linearLayout, false);
+        View noResultsView = layoutInflater.inflate(R.layout.no_results, linearLayout, false);
 
         Button button = noResultsView.findViewById(R.id.add_new_contact_btn);
         button.setOnClickListener(v -> {

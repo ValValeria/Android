@@ -21,12 +21,11 @@ import androidx.databinding.ViewDataBinding;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
-
 import com.example.calls.BR;
 import com.example.calls.R;
-import com.example.calls.databinding.FragmentContactBinding;
 import com.example.calls.models.Contact;
 import org.jetbrains.annotations.NotNull;
+
 
 public class ContactFragment extends Fragment {
     public static final String PHONE_ARG = "PHONE_ARG";
